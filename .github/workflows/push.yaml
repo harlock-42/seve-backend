@@ -58,7 +58,7 @@ jobs:
           SMTP_USER: ${{ vars.SMTP_USER}}
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD}}
           JWT_SECRET: ${{ secrets.JWT_SECRET}}
-          PORT: ${ vars.PORT }}
+          PORT: ${{ vars.PORT }}
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           K3S_DEPLOYMENT_NAME: ${{ vars.K3S_DEPLOYMENT_NAME }}
           K3S_NAMESPACE: ${{ vars.K3S_NAMESPACE }}
