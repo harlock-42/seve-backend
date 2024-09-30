@@ -93,9 +93,11 @@ jobs:
       - name: Push Docker image
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          K3S_DEPLOYMENT_NAME: ${{ vars.K3S_DEPLOYMENT_NAME }}
+          K3S_NAMESPACE: ${{ vars.K3S_NAMESPACE }}
         run: |
-          docker push $DOCKER_USERNAME/seve-front:${{ github.sha }}
-          docker push $DOCKER_USERNAME/seve-front:latest
+          docker push $DOCKER_USERNAME/$K3S_NAMESPACE-$K3S_DEPLOYMENT_NAME:${{ github.sha }}
+          docker push $DOCKER_USERNAME/$K3S_NAMESPACE-$K3S_DEPLOYMENT_NAME:latest
 
 
       - name: Logout from Docker Hub
