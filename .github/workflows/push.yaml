@@ -44,7 +44,6 @@ jobs:
 
       - name: build image
         env:
-
           PAT_TOKEN: ${{ secrets.PAT_TOKEN}}
           DB_USERNAME: ${{ secrets.DB_USERNAME}}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD}}
@@ -61,8 +60,10 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET}}
           PORT: ${ vars.PORT }}
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          K3S_DEPLOYMENT_NAME: ${{ vars.K3S_DEPLOYMENT_NAME }}
+          K3S_NAMESPACE: ${{ vars.K3S_NAMESPACE }}
         run: |
-          docker build -t $DOCKER_USERNAME/seve-front:latest \
+          docker build -t $DOCKER_USERNAME/$K3S_NAMESPACE-$K3S_DEPLOYMENT_NAME:latest \
           --build-arg PAT_TOKEN=$PAT_TOKEN \
           --build-arg DB_USERNAME=$DB_USERNAME \
           --build-arg DB_PASSWORD=$DB_PASSWORD \
@@ -82,9 +83,11 @@ jobs:
       - name: Tag Docker image
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          K3S_DEPLOYMENT_NAME: ${{ vars.K3S_DEPLOYMENT_NAME }}
+          K3S_NAMESPACE: ${{ vars.K3S_NAMESPACE }}
         run: |
-          docker tag $DOCKER_USERNAME/seve-front:latest $DOCKER_USERNAME/seve-front:${{ github.sha }}
-          docker tag $DOCKER_USERNAME/seve-front:latest $DOCKER_USERNAME/seve-front:latest
+          docker tag $DOCKER_USERNAME/$K3S_NAMESPACE-$K3S_DEPLOYMENT_NAME:latest $DOCKER_USERNAME/$K3S_NAMESPACE-$K3S_DEPLOYMENT_NAME:${{ github.sha }}
+          docker tag $DOCKER_USERNAME/$K3S_NAMESPACE-$K3S_DEPLOYMENT_NAME:latest $DOCKER_USERNAME/$K3S_NAMESPACE-$K3S_DEPLOYMENT_NAME:latest
 
       - name: Push Docker image
         env:
