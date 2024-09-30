@@ -45,20 +45,20 @@ jobs:
       - name: build image
         env:
 
-          PAT_TOKEN: ${{ secrets.PAT_TOKEN}} 
-          DB_USERNAME: ${{ secrets.DB_USERNAME}} 
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD}} 
-          DB_DATABASE: ${{ vars.DB_DATABASE}} 
-          DB_PORT: ${{ vars.DB_PORT}} 
-          DB_HOST: ${{ vars.DB_HOST}} 
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN}}
+          DB_USERNAME: ${{ secrets.DB_USERNAME}}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD}}
+          DB_DATABASE: ${{ vars.DB_DATABASE}}
+          DB_PORT: ${{ vars.DB_PORT}}
+          DB_HOST: ${{ vars.DB_HOST}}
           UPLOAD_FILE_PATH: ${{ vars.UPLOAD_FILE_PATH}}
           UPLOAD_PDF_PATH: ${{ vars.UPLOAD_PDF_PATH}} 
-          API_SECRET: ${{ vars.API_SECRET}} 
-          SMTP_HOST: ${{ vars.SMTP_HOST}} 
-          SMTP_PORT: ${{ vars.SMTP_PORT}} 
-          SMTP_USER: ${{ vars.SMTP_USER}} 
-          SMTP_PASSWORD: ${{ vars.SMTP_PASSWORD}} 
-          JWT_SECRET: ${{ vars.JWT_SECRET}}
+          API_SECRET: ${{ secrets.API_SECRET}} 
+          SMTP_HOST: ${{ vars.SMTP_HOST}}
+          SMTP_PORT: ${{ vars.SMTP_PORT}}
+          SMTP_USER: ${{ vars.SMTP_USER}}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD}}
+          JWT_SECRET: ${{ secrets.JWT_SECRET}}
           PORT: ${ vars.PORT }}
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: |
