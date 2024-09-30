@@ -78,7 +78,8 @@ jobs:
           --build-arg SMTP_USER=$SMTP_USER \
           --build-arg SMTP_PASSWORD=$SMTP_PASSWORD \
           --build-arg JWT_SECRET=$JWT_SECRET \
-          --build-arg PORT=$PORT
+          --build-arg PORT=$PORT \
+          ./nestjs
 
       - name: Tag Docker image
         env:
