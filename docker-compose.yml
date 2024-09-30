@@ -1,0 +1,55 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:15.2-alpine3.17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: seve-db
+    volumes:
+      - seve_db:/var/lib/postgresql/data
+
+  nestjs:
+    build:
+      context: ./nestjs/
+      dockerfile: Dockerfile
+      args:
+        PAT_TOKEN: ${PAT_TOKEN}
+    depends_on:
+      - postgres
+    environment:
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_PORT: ${DB_PORT}
+      DB_HOST: ${DB_HOST}
+      UPLOAD_FILE_PATH: ${UPLOAD_FILE_PATH}
+      UPLOAD_PDF_PATH: ${UPLOAD_PDF_PATH}
+      API_SECRET: ${API_SECRET}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      PORT: 3001
+    ports:
+      - 3001:3001
+    volumes:
+      - pictures:/data/pictures
+      - pdf:/data/pdf
+  
+  pgAdmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=contact@seve-france.fr
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    restart: always
+
+volumes:
+  seve_db: {}
+  pictures: {}
+  pdf: {}

@@ -1,0 +1,6 @@
+.env
+.git
+node_modules
+dist
+.prettierrc
+README.md
