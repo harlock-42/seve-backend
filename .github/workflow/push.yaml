@@ -1,0 +1,107 @@
+name: Build and Push Docker image
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    environment: production
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Install sshpass
+        run: sudo apt-get update && sudo apt-get install -y sshpass
+
+      - name: Set up Docker
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ca-certificates \
+            curl \
+            gnupg \
+            lsb-release
+          sudo mkdir -p /etc/apt/keyrings
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+          echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+            $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+
+      - name: Log in to Docker Hub
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+      - name: build image
+        env:
+
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN}} 
+          DB_USERNAME: ${{ secrets.DB_USERNAME}} 
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD}} 
+          DB_DATABASE: ${{ vars.DB_DATABASE}} 
+          DB_PORT: ${{ vars.DB_PORT}} 
+          DB_HOST: ${{ vars.DB_HOST}} 
+          UPLOAD_FILE_PATH: ${{ vars.UPLOAD_FILE_PATH}}
+          UPLOAD_PDF_PATH: ${{ vars.UPLOAD_PDF_PATH}} 
+          API_SECRET: ${{ vars.API_SECRET}} 
+          SMTP_HOST: ${{ vars.SMTP_HOST}} 
+          SMTP_PORT: ${{ vars.SMTP_PORT}} 
+          SMTP_USER: ${{ vars.SMTP_USER}} 
+          SMTP_PASSWORD: ${{ vars.SMTP_PASSWORD}} 
+          JWT_SECRET: ${{ vars.JWT_SECRET}}
+          PORT: ${ vars.PORT }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        run: |
+          docker build -t $DOCKER_USERNAME/seve-front:latest \
+          --build-arg PAT_TOKEN=$PAT_TOKEN \
+          --build-arg DB_USERNAME=$DB_USERNAME \
+          --build-arg DB_PASSWORD=$DB_PASSWORD \
+          --build-arg DB_DATABASE=$DB_DATABASE \
+          --build-arg DB_PORT=$DB_PORT \
+          --build-arg DB_HOST=$DB_HOST \
+          --build-arg UPLOAD_FILE_PATH=$UPLOAD_FILE_PATH \
+          --build-arg UPLOAD_PDF_PATH=$UPLOAD_PDF_PATH \
+          --build-arg API_SECRET=$API_SECRET \
+          --build-arg SMTP_HOST=$SMTP_HOST \
+          --build-arg SMTP_PORT=$SMTP_PORT \
+          --build-arg SMTP_USER=$SMTP_USER \
+          --build-arg SMTP_PASSWORD=$SMTP_PASSWORD \
+          --build-arg JWT_SECRET=$JWT_SECRET \
+          --build-arg PORT=$PORT
+
+      - name: Tag Docker image
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        run: |
+          docker tag $DOCKER_USERNAME/seve-front:latest $DOCKER_USERNAME/seve-front:${{ github.sha }}
+          docker tag $DOCKER_USERNAME/seve-front:latest $DOCKER_USERNAME/seve-front:latest
+
+      - name: Push Docker image
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        run: |
+          docker push $DOCKER_USERNAME/seve-front:${{ github.sha }}
+          docker push $DOCKER_USERNAME/seve-front:latest
+
+
+      - name: Logout from Docker Hub
+        run: docker logout
+
+      - name: Update deployments
+        env:
+          VPS_PWD: ${{ secrets.VPS_PWD }}
+          VPS_IP: ${{ vars.VPS_IP }}
+          K3S_DEPLOYMENT_NAME: ${{ vars.K3S_DEPLOYMENT_NAME }}
+          K3S_NAMESPACE: ${{ vars.K3S_NAMESPACE }}
+        run: |
+          sshpass -p $VPS_PWD ssh -o StrictHostKeyChecking=no root@$VPS_IP "kubectl rollout restart deployment $K3S_DEPLOYMENT_NAME -n $K3S_NAMESPACE"

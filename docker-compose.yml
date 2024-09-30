@@ -15,23 +15,22 @@ services:
       dockerfile: Dockerfile
       args:
         PAT_TOKEN: ${PAT_TOKEN}
+        DB_USERNAME: ${DB_USERNAME}
+        DB_PASSWORD: ${DB_PASSWORD}
+        DB_DATABASE: ${DB_DATABASE}
+        DB_PORT: ${DB_PORT}
+        DB_HOST: ${DB_HOST}
+        UPLOAD_FILE_PATH: ${UPLOAD_FILE_PATH}
+        UPLOAD_PDF_PATH: ${UPLOAD_PDF_PATH}
+        API_SECRET: ${API_SECRET}
+        SMTP_HOST: ${SMTP_HOST}
+        SMTP_PORT: ${SMTP_PORT}
+        SMTP_USER: ${SMTP_USER}
+        SMTP_PASSWORD: ${SMTP_PASSWORD}
+        JWT_SECRET: ${JWT_SECRET}
+        PORT: 3001
     depends_on:
       - postgres
-    environment:
-      DB_USERNAME: ${DB_USERNAME}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_DATABASE: ${DB_DATABASE}
-      DB_PORT: ${DB_PORT}
-      DB_HOST: ${DB_HOST}
-      UPLOAD_FILE_PATH: ${UPLOAD_FILE_PATH}
-      UPLOAD_PDF_PATH: ${UPLOAD_PDF_PATH}
-      API_SECRET: ${API_SECRET}
-      SMTP_HOST: ${SMTP_HOST}
-      SMTP_PORT: ${SMTP_PORT}
-      SMTP_USER: ${SMTP_USER}
-      SMTP_PASSWORD: ${SMTP_PASSWORD}
-      JWT_SECRET: ${JWT_SECRET}
-      PORT: 3001
     ports:
       - 3001:3001
     volumes:
