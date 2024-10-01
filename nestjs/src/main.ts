@@ -12,11 +12,12 @@ async function bootstrap() {
       'http://localhost:3000',
       'http://localhost:3001',
       'http://localhost:3001/api',
-      'https://seve-france.fr',
-      'https://seve-api.fr/api',
-      'http://seve-api.fr/api',
-      'https://seve-api.fr',
-      'http://seve-api.fr',
+      'https://seve.harlock.fr',
+      'http://seve.harlock.fr',
+      'https://api.seve.harlock.fr',
+      'http://api.seve.harlock.fr',
+      'https://api.seve.harlock.fr/api',
+      'http://api.seve.harlock.fr/api',
       '*'
     ]
     if (!origin || whiteList.indexOf(origin) !== -1) {
