@@ -19,6 +19,8 @@ async function bootstrap() {
       'https://api.seve.harlock.fr/api',
       'http://api.seve.harlock.fr/api',
       'http://backend:3000',
+      'http://localhost:3002',
+      'http://frontend:3000',
       '*'
     ]
     if (!origin || whiteList.indexOf(origin) !== -1) {
