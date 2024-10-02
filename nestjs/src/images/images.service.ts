@@ -42,8 +42,10 @@ export default class ImagesService {
 
 	async downloadOne(keyfile: string): Promise<Buffer> {
 		const imagePath = `${this.configService.get<string>('UPLOAD_FILE_PATH')}/${keyfile}`
+		console.log("imagePath", imagePath)
 		try {
 			const imageBuffer = await fsPromises.readFile(imagePath)
+			console.log("imageBuffer", imageBuffer)
 			return imageBuffer
 		} catch (err) {
 			console.error(err)

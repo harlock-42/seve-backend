@@ -22,7 +22,9 @@ export default class ImagesController {
 	@ApiBadRequestResponse({ description: 'Bad request'})
 	@ApiSecurity('x-api-secret')
 	async download(@Param('filename') keyfile: string, @Res() res: Response) {
+		console.log("test toute image")
 		const image = await this.imageService.downloadOne(keyfile)
+		console.log("image", image)
 		if (image) {
 			res.setHeader('Content-Type', 'image/jpeg')
 			res.send(image)
